@@ -1,11 +1,9 @@
 import com.training.Calculator.Calculator;
 import jdk.jfr.Description;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.openqa.selenium.NotFoundException;
 
 
 /*
@@ -26,12 +24,14 @@ public class CalculatorTest {
 
      @BeforeAll
      static
-     void setup(){
-        testCalculator = new Calculator();
+     void initialSetUp(){
+
+         testCalculator = new Calculator();
     }
 
     @Test
     @Description("testing for the sum operation")
+    @Order(2)
     void testPerformOperation(){
         double num1 = 20d;
         double num2 = 40d;
@@ -48,6 +48,34 @@ public class CalculatorTest {
         double result = testCalculator.performOperation(num1, num2, choice);
         System.out.println(result);
         Assertions.assertEquals(expectedSum, result);
+
     }
 
+    @Test
+    void testForDivison(){
+        int choice = 4;
+        //double result = testCalculator.performOperation(1, 0, choice);
+        Exception exception = Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+            testCalculator.performOperation(4, 0, choice);
+        });
+
+        System.out.println(exception);
+        Assertions.assertEquals(exception.getMessage(), "Division by zero not allowed");
+    }
+
+    @Test
+    void testForperformOperationException(){
+        int choice = 5;
+        //double result = testCalculator.performOperation(1, 0, choice);
+        Exception exception = Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+            testCalculator.performOperation(5, 0, choice);
+        });
+
+        Assertions.assertEquals(exception.getMessage(), "operation not found");
+    }
+
+    @AfterAll
+    static void doCleanup(){
+         //clean all your resources
+    }
 }

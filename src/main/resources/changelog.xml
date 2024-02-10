@@ -1,0 +1,24 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="createEmployeeTable" author="you">
+        <createTable tableName="employee">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="age" type="INTEGER"/>
+            <column name="description" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="insertInitialData" author="you">
+        <sql>INSERT INTO employee (id, name, age, description) VALUES
+            (1, 'John Doe', 30, 'Software Engineer'),
+            (2, 'Jane Smith', 28, 'Product Manager');</sql>
+    </changeSet>
+
+</databaseChangeLog>

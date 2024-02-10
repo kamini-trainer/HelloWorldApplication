@@ -1,5 +1,8 @@
 package com.training.Calculator;
 
+import org.openqa.selenium.NotFoundException;
+
+import javax.lang.model.UnknownEntityException;
 import java.util.Scanner;
 
 public class Calculator {
@@ -47,9 +50,7 @@ public class Calculator {
             case 4:
                 return operation.divide(num1, num2);
             default:
-                System.out.println("Invalid choice");
-                System.exit(0);
-                return 0; // Unreachable code
+                throw new UnsupportedOperationException("operation not found");
         }
     }
 }
