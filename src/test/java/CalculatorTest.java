@@ -3,9 +3,8 @@ import jdk.jfr.Description;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.openqa.selenium.NotFoundException;
 
-
+import org.assertj.core.api.Assertions;
 /*
 * 1. Either make the method setup static or annotate the class with
 *       @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -38,7 +37,7 @@ public class CalculatorTest {
         int choice = 1;
         double result = testCalculator.performOperation(num1, num2, choice);
         System.out.println(result);
-        Assertions.assertEquals(60d, result);
+        org.junit.jupiter.api.Assertions.assertEquals(60d, result);
     }
 
     @ParameterizedTest
@@ -47,35 +46,70 @@ public class CalculatorTest {
         int choice = 1;
         double result = testCalculator.performOperation(num1, num2, choice);
         System.out.println(result);
-        Assertions.assertEquals(expectedSum, result);
+        org.junit.jupiter.api.Assertions.assertEquals(expectedSum, result);
 
+    }
+
+    @Test
+    void compareTwoObjects(){
+        Person expected = new Person("John", 25, new Address("123 Street"));
+        Person actual = new Person("John", 25, new Address("456 Street"));
+
+        // Compare objects, excluding the 'address' field
+        Assertions.assertThat(actual)
+                .usingRecursiveComparison()
+                .ignoringFields("address")
+                .isEqualTo(expected);
     }
 
     @Test
     void testForDivison(){
         int choice = 4;
         //double result = testCalculator.performOperation(1, 0, choice);
-        Exception exception = Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+        Exception exception = org.junit.jupiter.api.Assertions.assertThrows(UnsupportedOperationException.class, () -> {
             testCalculator.performOperation(4, 0, choice);
         });
 
         System.out.println(exception);
-        Assertions.assertEquals(exception.getMessage(), "Division by zero not allowed");
+        org.junit.jupiter.api.Assertions.assertEquals(exception.getMessage(), "Division by zero not allowed");
     }
 
     @Test
     void testForperformOperationException(){
         int choice = 5;
         //double result = testCalculator.performOperation(1, 0, choice);
-        Exception exception = Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+        Exception exception = org.junit.jupiter.api.Assertions.assertThrows(UnsupportedOperationException.class, () -> {
             testCalculator.performOperation(5, 0, choice);
         });
 
-        Assertions.assertEquals(exception.getMessage(), "operation not found");
+        org.junit.jupiter.api.Assertions.assertEquals(exception.getMessage(), "operation not found");
     }
 
     @AfterAll
     static void doCleanup(){
          //clean all your resources
+    }
+
+    // Define the Person and Address classes
+    static class Person {
+        private String name;
+        private int age;
+        private Address address;
+
+        public Person(String name, int age, Address address) {
+            this.name = name;
+            this.age = age;
+            this.address = address;
+        }
+        // Getters and setters
+    }
+
+    static class Address {
+        private String street;
+
+        public Address(String street) {
+            this.street = street;
+        }
+        // Getters and setters
     }
 }
