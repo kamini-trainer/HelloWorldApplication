@@ -16,6 +16,10 @@ public class SearchModuleImpl implements SearchModule{
 
     }
 
+    @Override
+    public List<String> searchCache(String dateString) {
+        return null;
+    }
 
 
 }

@@ -1,10 +1,7 @@
 import com.flight.app.SearchModule;
 import com.flight.app.SearchModuleImpl;
 import com.google.errorprone.annotations.DoNotMock;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import liquibase.Liquibase;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;
@@ -18,11 +15,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static org.mockito.Mockito.*;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.Arrays;
 import java.util.List;
+
 
 @ExtendWith(MyExtension.class)
 public class SearchModuleUnitTest {
@@ -33,6 +28,11 @@ public class SearchModuleUnitTest {
     public SearchModuleUnitTest() {
         MockitoAnnotations.openMocks(this); // Initialize annotated mocks
     }
+
+
+    @Test
+    @Disabled
+    void testMe(){}
 
     @ParameterizedTest
     @CsvSource({"2024-01-01", "2024-01-02", "2024-01-03"})
@@ -46,6 +46,26 @@ public class SearchModuleUnitTest {
 
     }
 
+    @ParameterizedTest
+    @CsvSource({"2024-01-01"})
+
+    //check here : https://github.com/kamini-trainer/HelloWorldApplication/blob/cdfee7817cc904513a4108443973ca679f4d99da/pom.xml#L65C9-L76C22
+    public void searchcache_test(String date) {
+        //
+        when(searchModule.searchCache(date)).thenReturn(Arrays.asList("Indigo", "SpiceJet"));
+
+        //!IMPORTANT :: check if the debugger is hitting the method to be mocked or not
+        // if it hits -> then the methods has not been mocked, else its been mocked successfully
+
+        List<String> actualOutput = searchModule.searchCache(date);
+        List<String> expectedOutput = getExpectedFlightNames(date);
+        //TODO: check for array of objects
+        Assertions.assertEquals(expectedOutput, actualOutput); //expectedOutput, actualOutput
+
+    }
+
+
+
     // TODO:// create a function that provides us the expected output for our query string
     private static List<String> getExpectedFlightNames(String date){
         // TODO : do the implementation to fetch from the database
@@ -53,25 +73,4 @@ public class SearchModuleUnitTest {
     }
 }
 
-class MyExtension implements BeforeAllCallback, AfterAllCallback {
-    private static final String DATABASE_URL = "jdbc:postgresql://localhost:5432/postgres";
-    private static final String DATABASE_USER = "postgres";
-    private static final String DATABASE_PASSWORD = "mysecretpassword";
-    private static Liquibase liquibase;
 
-    @Override
-    public void afterAll(ExtensionContext extensionContext) throws Exception {
-       // liquibase.rollback("", "");
-    }
-
-    @Override
-    public void beforeAll(ExtensionContext extensionContext) throws Exception {
-        try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD)) {
-            // Initialize Liquibase
-            liquibase = new Liquibase("changelog.xml", new ClassLoaderResourceAccessor(), new JdbcConnection(connection));
-//            liquibase.rollback("", "");
-            // Run the change log
-            liquibase.update("");
-        }
-    }
-}

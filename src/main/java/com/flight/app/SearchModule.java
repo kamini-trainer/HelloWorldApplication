@@ -4,4 +4,6 @@ import java.util.List;
 
 public interface SearchModule {
     List<String> getListOfFlightsByDate(String dateString);
+
+    List<String> searchCache(String dateString);
 }

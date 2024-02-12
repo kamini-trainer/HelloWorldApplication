@@ -1,8 +1,5 @@
 package com.training.Calculator;
 
-import org.openqa.selenium.NotFoundException;
-
-import javax.lang.model.UnknownEntityException;
 import java.util.Scanner;
 
 public class Calculator {

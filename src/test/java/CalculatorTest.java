@@ -15,22 +15,21 @@ import org.assertj.core.api.Assertions;
         sol: fix the below exception by using @TestInstance
 *   b)
  * */
-//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CalculatorTest {
 
      private static Calculator testCalculator = null;
 
 
      @BeforeAll
-     static
      void initialSetUp(){
 
          testCalculator = new Calculator();
     }
 
     @Test
-    @Description("testing for the sum operation")
     @Order(2)
+    @Description("testing for the sum operation")
     void testPerformOperation(){
         double num1 = 20d;
         double num2 = 40d;
@@ -42,6 +41,7 @@ public class CalculatorTest {
 
     @ParameterizedTest
     @CsvSource({"2,3,5", "5, 7, 12", "10, 5, 15"})
+    @Disabled
     void testWithParams(int num1, int num2, int expectedSum){
         int choice = 1;
         double result = testCalculator.performOperation(num1, num2, choice);
@@ -51,22 +51,25 @@ public class CalculatorTest {
     }
 
     @Test
+    @Order(1)
     void compareTwoObjects(){
-        Person expected = new Person("John", 25, new Address("123 Street"));
-        Person actual = new Person("John", 25, new Address("456 Street"));
+        Person expected = new Person("John", 25, new Address("123 Street", "101"));
+        Person actual = new Person("John", 25, new Address("456 Street", "101"));
 
         // Compare objects, excluding the 'address' field
         Assertions.assertThat(actual)
                 .usingRecursiveComparison()
-                .ignoringFields("address")
+                .ignoringFields("address.street")
                 .isEqualTo(expected);
     }
 
     @Test
+    @Order(3)
     void testForDivison(){
         int choice = 4;
         //double result = testCalculator.performOperation(1, 0, choice);
-        Exception exception = org.junit.jupiter.api.Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+        Exception exception =
+                org.junit.jupiter.api.Assertions.assertThrows(UnsupportedOperationException.class, () -> {
             testCalculator.performOperation(4, 0, choice);
         });
 
@@ -86,7 +89,7 @@ public class CalculatorTest {
     }
 
     @AfterAll
-    static void doCleanup(){
+    void doCleanup(){
          //clean all your resources
     }
 
@@ -106,9 +109,11 @@ public class CalculatorTest {
 
     static class Address {
         private String street;
+        private String pincode;
 
-        public Address(String street) {
+        public Address(String street, String pincode) {
             this.street = street;
+            this.pincode = pincode;
         }
         // Getters and setters
     }

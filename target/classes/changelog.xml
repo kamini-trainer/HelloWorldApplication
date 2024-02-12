@@ -21,4 +21,25 @@
             (2, 'Jane Smith', 28, 'Product Manager');</sql>
     </changeSet>
 
+        <changeSet id="createSearchFlightTable1" author="you">
+            <createTable tableName="searching">
+                <column name="id" type="BIGINT">
+                    <constraints primaryKey="true" nullable="false"/>
+                </column>
+                <column name="name" type="VARCHAR(255)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="flight_date" type="DATE">
+                    <constraints nullable="false"/>
+                </column>
+            </createTable>
+        </changeSet>
+
+    <changeSet id="insertInitialDataToSearchTable1" author="you">
+        <sql>INSERT INTO searching (id, name, flight_date) VALUES
+            (1, 'Indigo', '2024-01-01'),
+            (2, 'Spicejet', '2024-01-01');</sql>
+    </changeSet>
+
+
 </databaseChangeLog>
